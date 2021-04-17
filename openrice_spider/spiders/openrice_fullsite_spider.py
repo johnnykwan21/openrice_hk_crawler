@@ -1,6 +1,7 @@
 '''
 Run with $scrapy crawl openrice_spider
 '''
+
 # -*- coding: utf-8 -*-
 import scrapy
 from ..items import OpenriceItem, OpenriceItemLoader
@@ -24,6 +25,7 @@ class RiceSpider(scrapy.Spider):
     sort_method_list = ['ConsumeAsc', 'ConsumeDesc']
 
     id_regex = '(?<=data-param=")(.*)(?=. data-toggle)'
+    totalpage_limitation = 17
 
     # Get district ids (districtId)
     def parse(self, response):
@@ -84,7 +86,7 @@ class RiceSpider(scrapy.Spider):
         # Check if level 1 query excessed query limit -> query_level: 2
         if query_level == 1:
             food_cat = response.meta['food_cat']
-            if totalPage == 17:
+            if totalPage == self.totalpage_limitation:
                 yield from self.search_with_food_cat_and_district(food_cat)
             else:
                 yield from self.parse_res_url(response)
@@ -93,8 +95,8 @@ class RiceSpider(scrapy.Spider):
         if query_level == 2:
             food_cat = response.meta['food_cat']
             district_id = response.meta['district_id']
-            if totalPage == 17:
-                yield from self.search_with_district_and_food_cat_and_price_range(food_cat, district_id)
+            if totalPage == self.totalpage_limitation:
+                yield from self.search_with_and_food_cat_and_district_price_range(food_cat, district_id)
             else:
                 yield from self.parse_res_url(response)
 
@@ -107,7 +109,7 @@ class RiceSpider(scrapy.Spider):
                                  meta={'food_cat': food_cat, 'district_id': district_id, 'query_level': 2})
 
     # Level 3 Query (Search by Food Cat, District, Price Range)
-    def search_with_district_and_food_cat_and_price_range(self, food_cat, district_id):
+    def search_with_and_food_cat_and_district_price_range(self, food_cat, district_id):
         for price_range in self.price_range_id_list:
             url = ''.join((self.base_url, self.api_url_prefix, '&', str(food_cat), '&', str(district_id),
                     '&', str(price_range), '&sortBy=', str(self.sort_method_list[0]), self.api_url_suffix))
@@ -243,6 +245,6 @@ class RiceSpider(scrapy.Spider):
             pass
 
         # Loop the page again in descending order while totalpage excessed limit
-        if totalPage == 17 and self.sort_method_list[0] in response.url:
+        if totalPage == self.totalpage_limitation and self.sort_method_list[0] in response.url:
             url = response.url.replace(self.sort_method_list[0], self.sort_method_list[1])
             yield scrapy.Request(url, callback=self.parse_res_url)
