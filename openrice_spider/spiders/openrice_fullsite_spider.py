@@ -136,7 +136,7 @@ class RiceSpider(scrapy.Spider):
 
                 try:
                     chi_address = res['address'].strip()
-                except Exception:
+                except KeyError:
                     chi_address = None
                 item_loader.add_value('chi_address', chi_address)
 
@@ -159,7 +159,7 @@ class RiceSpider(scrapy.Spider):
 
                 try:
                     payment_method = str(res['paymentIds']).replace('[', '').replace(']', '')
-                except Exception:
+                except KeyError:
                     payment_method = None
                 item_loader.add_value('payment_method', payment_method)
 
@@ -168,7 +168,7 @@ class RiceSpider(scrapy.Spider):
 
                 try:
                     opensince = res['openSince']
-                except Exception:
+                except KeyError:
                     opensince = None
                 item_loader.add_value('opensince', opensince)
 
