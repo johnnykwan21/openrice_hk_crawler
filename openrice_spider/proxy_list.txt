@@ -1,0 +1,6 @@
+# Paste your proxy list in the following format
+
+IP:PORT
+IP:PORT
+IP:PORT
+IP:PORT
