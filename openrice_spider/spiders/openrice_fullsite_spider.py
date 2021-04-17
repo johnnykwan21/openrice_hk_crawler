@@ -1,3 +1,6 @@
+'''
+Run with $scrapy crawl openrice_spider
+'''
 # -*- coding: utf-8 -*-
 import scrapy
 from ..items import OpenriceItem, OpenriceItemLoader
