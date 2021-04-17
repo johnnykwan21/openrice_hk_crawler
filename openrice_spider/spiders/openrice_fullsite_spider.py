@@ -15,7 +15,7 @@ class RiceSpider(scrapy.Spider):
     api_url_suffix = '&page=1'
 
     district_id_list = [] # 地區
-    distinct_id_to_exclude = ['districtId=1999', 'districtId=2999', 'districtId=3999', 'districtId=4999']
+    district_id_to_exclude = ['districtId=1999', 'districtId=2999', 'districtId=3999', 'districtId=4999']
     food_id_list = []  # 食品 / 餐廳類型 (sub-cat + cat-group) & 菜式 (cuisine)
     price_range_id_list = list(range(1, 6))
     sort_method_list = ['ConsumeAsc', 'ConsumeDesc']
@@ -27,7 +27,7 @@ class RiceSpider(scrapy.Spider):
         for district in response.css('#or-route-sr1-filters-landmark-tab-district > section > div > div > div > div > div.btn'):
             district_id = re.search(self.id_regex, district.get()).group()
 
-            if district_id not in self.district_id_list and district_id not in self.distinct_id_to_exclude:
+            if district_id not in self.district_id_list and district_id not in self.district_id_to_exclude:
                 self.district_id_list.append(district_id)
         yield from self.parse_food_sub_cat_ids(response)
 
