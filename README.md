@@ -1,5 +1,5 @@
 # openrice_hk_crawler
-Scraping restaurant data from [OpenRice HK](https://www.openrice.com/zh/hongkong) using Scrapy. 
+Scraping restaurant data from [OpenRice HK](https://www.openrice.com/zh/hongkong) using Scrapy, for later on F&B analysis project
 
 ## Installation of libraries
 ``` bash
