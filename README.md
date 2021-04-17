@@ -21,7 +21,7 @@ e.g. restaurant_data_20210417_1942
 ``` 
 
 ## Proxy configuration
-To Enable proxies rotation, simply unhash to following row in setting.py and put a proxy list aside that
+To Enable proxies rotation, simply unhash to following row in setting.py with a proxy_list in txt format
 
 ``` bash
 # Proxy List
