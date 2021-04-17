@@ -24,7 +24,7 @@ e.g. restaurant_data_20210417_1942
 To Enable proxies rotation, simply unhash to following row in setting.py with a proxy_list in txt format
 
 ``` bash
-# Proxy List
+# # Proxy List
 # DOWNLOADER_MIDDLEWARES = {
 #     'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
 #     'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
