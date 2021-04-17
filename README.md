@@ -13,9 +13,9 @@ $ scrapy crawl openrice_spider
 ``` 
 
 ## Output
+Full site scrapping data will be output in JSON with the following format:
 
 ``` bash
-Full site scrapping data will be output in JSON with the following format:
 restaurant_data_{spider date}_{spider start time}
 e.g. restaurant_data_20210417_1942
 ``` 
