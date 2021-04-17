@@ -125,7 +125,7 @@ class RiceSpider(scrapy.Spider):
         if result_size != 0:
             # Get data of each restaurant
             for res in results:
-                item_loader = OpenriceItemLoader(item=OpenriceItem())
+                item_loader = OpenriceItemLoader(item=OpenriceItem(), response=response)
                 item_loader.add_value('spider_date', date.today().strftime("%Y/%m/%d"))
                 item_loader.add_value('region_name', res['regionName'])
                 item_loader.add_value('district_id', res['district']['districtId'])
