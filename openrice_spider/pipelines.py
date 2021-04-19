@@ -23,7 +23,7 @@ class OpenriceRestaurantPipeline(object):
             self.shorten_url_list.add(item['shorten_url'])
             self.exporter.export_item(item)
             print("\n**** Scrapped: " + str(len(self.shorten_url_list)) + " restaurant ****")
-            print (item)
+            print(item)
 
     def close_spider(self, spider):
         self.exporter.finish_exporting()
