@@ -85,17 +85,18 @@ class RiceSpider(scrapy.Spider):
 
         # Check if level 1 query excessed query limit -> query_level: 2
         if query_level == 1:
-            food_cat = response.meta['food_cat']
+
             if totalPage == self.totalpage_limitation:
+                food_cat = response.meta['food_cat']
                 yield from self.search_with_food_cat_and_district(food_cat)
             else:
                 yield from self.parse_res_url(response)
 
         # Check if level 2 query excessed query limit -> query_level: 3
         if query_level == 2:
-            food_cat = response.meta['food_cat']
-            district_id = response.meta['district_id']
             if totalPage == self.totalpage_limitation:
+                food_cat = response.meta['food_cat']
+                district_id = response.meta['district_id']
                 yield from self.search_with_and_food_cat_and_district_price_range(food_cat, district_id)
             else:
                 yield from self.parse_res_url(response)
@@ -121,11 +122,11 @@ class RiceSpider(scrapy.Spider):
         totalPage = data['totalPage']
         results = data['searchResult']['paginationResult']['results']
         result_size = len(results)
+        res_data = OpenriceItem()
         # Check if any result in response page
         if result_size != 0:
             # Get data of each restaurant
             for res in results:
-                res_data = OpenriceItem()
                 res_data['spider_date'] = date.today().strftime("%Y/%m/%d")
                 res_data['region_name'] = res['regionName']
                 res_data['district_id'] = res['district']['districtId']
