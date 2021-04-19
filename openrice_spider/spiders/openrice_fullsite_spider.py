@@ -4,10 +4,10 @@ Run with $scrapy crawl openrice_spider
 
 # -*- coding: utf-8 -*-
 import scrapy
-from ..items import OpenriceItem, OpenriceItemLoader
 import re
 import json
 from datetime import date
+from ..items import OpenriceItem
 
 class RiceSpider(scrapy.Spider):
     name = 'openrice_spider'
@@ -125,92 +125,99 @@ class RiceSpider(scrapy.Spider):
         if result_size != 0:
             # Get data of each restaurant
             for res in results:
-                item_loader = OpenriceItemLoader(item=OpenriceItem(), response=response)
-                item_loader.add_value('spider_date', date.today().strftime("%Y/%m/%d"))
-                item_loader.add_value('region_name', res['regionName'])
-                item_loader.add_value('district_id', res['district']['districtId'])
-                item_loader.add_value('district_name', res['district']['name'])
-                item_loader.add_value('res_uid', res['poiId'])
-                item_loader.add_value('res_name', res['nameUI'])
-                item_loader.add_value('shorten_url', res['shortenUrl'])
+                res_data = OpenriceItem()
+                res_data['spider_date'] = date.today().strftime("%Y/%m/%d")
+                res_data['region_name'] = res['regionName']
+                res_data['district_id'] = res['district']['districtId']
+                res_data['district_name'] = res['district']['name']
+
+                try:
+                    res_uid = res['poiId']
+                except KeyError:
+                    res_uid = None
+                res_data['res_uid'] = res['poiId']
+                res_data['res_name'] = res['nameUI']
+                res_data['shorten_url'] = res['shortenUrl']
 
                 try:
                     chi_address = res['address'].strip()
                 except KeyError:
                     chi_address = None
-                item_loader.add_value('chi_address', chi_address)
+                res_data['chi_address'] = chi_address
 
                 tel_no_list = []
                 for tel_no in res['phones']:
                     tel_no_list.append(tel_no.replace(" ", "").replace("-", ""))
                 tel_no = ",".join(tel_no_list)
-                item_loader.add_value('tel_no', tel_no)
+                res_data['tel_no'] = tel_no
 
                 food_type_list = []
                 for food_type in res['categories']:
                     if food_type['categoryTypeId'] == 1:
-                        item_loader.add_value('primary_food_type', food_type['callName'])
+                        primary_food_type = food_type['callName']
                     else:
                         food_type_list.append(food_type['callName'])
                 secondary_food_type = ",".join(food_type_list)
-                item_loader.add_value('secondary_food_type', secondary_food_type)
-
-                item_loader.add_value('price_range', res['priceUI'])
+                res_data['primary_food_type'] = primary_food_type
+                res_data['secondary_food_type'] = secondary_food_type
+                res_data['price_range'] = res['priceUI']
 
                 try:
                     payment_method = str(res['paymentIds']).replace('[', '').replace(']', '')
                 except KeyError:
                     payment_method = None
-                item_loader.add_value('payment_method', payment_method)
+                res_data['payment_method'] = payment_method
 
-                item_loader.add_value('maplatitude', res['mapLatitude'])
-                item_loader.add_value('maplongitude', res['mapLongitude'])
+                res_data['maplatitude'] = res['mapLatitude']
+                res_data['maplongitude'] = res['mapLongitude']
 
                 try:
                     opensince = res['openSince']
                 except KeyError:
                     opensince = None
-                item_loader.add_value('opensince', opensince)
+                res_data['opensince'] = opensince
+
 
                 if res['moveToId'] != 0:
                     isrelocated = True
                 else:
                     isrelocated = False
-                item_loader.add_value('is_relocated', isrelocated)
+                res_data['is_relocated'] = isrelocated
 
-                item_loader.add_value('res_status', res['statusText'])
-                item_loader.add_value('score_smile', int(res['scoreSmile']))
-                item_loader.add_value('score_cry', int(res['scoreCry']))
+
+                res_data['res_status'] = res['statusText']
+                res_data['score_smile'] = int(res['scoreSmile'])
+                res_data['score_cry'] = int(res['scoreCry'])
 
                 try:
                     overall_score = res['scoreOverall']
                 except KeyError:
                     overall_score = None
-                item_loader.add_value('overall_score', overall_score)
+                res_data['overall_score'] = overall_score
 
                 try:
                     reviewcount = res['reviewCount']
                 except KeyError:
                     reviewcount = None
-                item_loader.add_value('review_count', reviewcount)
+                res_data['review_count'] = reviewcount
 
                 try:
                     bookmarkedUserCount = res['bookmarkedUserCount']
                 except KeyError:
                     bookmarkedUserCount = None
-                item_loader.add_value('bookmarked_user_count', bookmarkedUserCount)
+                res_data['bookmarked_user_count'] = bookmarkedUserCount
 
                 try:
                     is_takeaway_enabled = res['takeAwayInfo']['isEnableRemark']
                 except KeyError:
                     is_takeaway_enabled = None
-                item_loader.add_value('is_takeaway_enabled', is_takeaway_enabled)
+                res_data['is_takeaway_enabled'] = is_takeaway_enabled
 
                 try:
                     earliest_takeaway = res['takeAwayInfo']['infoDisplay']
                 except KeyError:
                     earliest_takeaway = None
-                item_loader.add_value('earliest_takeaway', earliest_takeaway)
+                res_data['earliest_takeaway'] = earliest_takeaway
 
                 try:
                     if res['tmBookingWidget']['isBookingDisabled'] == False:
@@ -219,7 +226,7 @@ class RiceSpider(scrapy.Spider):
                         is_booking_enabled = False
                 except KeyError:
                     is_booking_enabled = None
-                item_loader.add_value('is_booking_enabled', is_booking_enabled)
+                res_data['is_booking_enabled'] = is_booking_enabled
 
                 bookingOffers_list = []
                 try:
@@ -228,10 +235,9 @@ class RiceSpider(scrapy.Spider):
                     bookingoffers = ",".join(bookingOffers_list)
                 except KeyError:
                     bookingoffers = None
-                item_loader.add_value('booking_offers', bookingoffers)
+                res_data['booking_offers'] = bookingoffers
 
-                yield item_loader.load_item()
-
+                yield res_data
         else:
             pass
 
