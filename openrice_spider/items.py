@@ -5,43 +5,38 @@
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/items.html
 
-from scrapy.item import Item, Field
-from scrapy.loader import ItemLoader
-from scrapy.loader.processors import TakeFirst
+import scrapy
 
-class OpenriceItemLoader(ItemLoader):
-    default_output_processor = TakeFirst()
+class OpenriceItem(scrapy.Item):
+    spider_date = scrapy.Field()
 
-class OpenriceItem(Item):
-    res_uid = Field()
-    res_name = Field()
-    region_name = Field()
-    district_id = Field()
-    district_name = Field()
-    shorten_url = Field()
-    chi_address = Field()
-    tel_no = Field()
+    res_uid = scrapy.Field()
+    res_name = scrapy.Field()
+    region_name = scrapy.Field()
+    district_id = scrapy.Field()
+    district_name = scrapy.Field()
+    shorten_url = scrapy.Field()
+    chi_address = scrapy.Field()
+    tel_no = scrapy.Field()
 
-    primary_food_type = Field()
-    secondary_food_type = Field()
-    price_range = Field()
-    payment_method = Field()
+    primary_food_type = scrapy.Field()
+    secondary_food_type = scrapy.Field()
+    price_range = scrapy.Field()
+    payment_method = scrapy.Field()
 
-    maplatitude = Field()
-    maplongitude = Field()
-    opensince = Field()
-    is_relocated = Field()
-    res_status = Field()
+    maplatitude = scrapy.Field()
+    maplongitude = scrapy.Field()
+    opensince = scrapy.Field()
+    is_relocated = scrapy.Field()
+    res_status = scrapy.Field()
 
-    score_smile = Field()
-    score_cry = Field()
-    overall_score = Field()
-    review_count = Field()
-    bookmarked_user_count = Field()
+    score_smile = scrapy.Field()
+    score_cry = scrapy.Field()
+    overall_score = scrapy.Field()
+    review_count = scrapy.Field()
+    bookmarked_user_count = scrapy.Field()
 
-    is_takeaway_enabled = Field()
-    earliest_takeaway = Field()
-    is_booking_enabled = Field()
-    booking_offers = Field()
-
-    spider_date = Field()
+    is_takeaway_enabled = scrapy.Field()
+    earliest_takeaway = scrapy.Field()
+    is_booking_enabled = scrapy.Field()
+    booking_offers = scrapy.Field()
