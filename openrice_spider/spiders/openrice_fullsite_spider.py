@@ -239,6 +239,7 @@ class RiceSpider(scrapy.Spider):
                 res_data['booking_offers'] = bookingoffers
 
                 yield res_data
+                
         else:
             pass
 
