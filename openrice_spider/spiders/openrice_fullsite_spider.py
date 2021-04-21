@@ -155,12 +155,12 @@ class RiceSpider(scrapy.Spider):
                 food_type_list = []
                 for food_type in res['categories']:
                     if food_type['categoryTypeId'] == 1:
-                        primary_food_type = food_type['callName']
+                        res_data['primary_food_type'] = food_type['callName']
                     else:
                         food_type_list.append(food_type['callName'])
                 secondary_food_type = ",".join(food_type_list)
-                res_data['primary_food_type'] = primary_food_type
                 res_data['secondary_food_type'] = secondary_food_type
+                
                 res_data['price_range'] = res['priceUI']
 
                 try:
